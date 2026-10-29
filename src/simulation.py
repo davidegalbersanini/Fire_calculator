@@ -547,7 +547,9 @@ def simula_stress_test_storico(
     matches = np.where(anni_dataset == anno_inizio_crisi)[0]
     idx_crisi = int(matches[0]) if len(matches) > 0 else 0
 
-    indici = (idx_crisi + np.arange(durata) - anni_accumulo) % len(df)
+    # L'anno di scoppio della crisi deve colpire il primo anno effettivo di decumulo FIRE
+    # (ovvero il passaggio tra l'età di ritiro t=anni_accumulo e t+1=anni_accumulo+1)
+    indici = (idx_crisi + np.arange(durata) - (anni_accumulo + 1)) % len(df)
 
     md_eq = (1.0 + df[col_stock].to_numpy()[indici])[:, np.newaxis]
     md_bd = (1.0 + df["bund_10y_tr_eur"].to_numpy()[indici])[:, np.newaxis]
